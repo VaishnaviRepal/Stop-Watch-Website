@@ -1,10 +1,21 @@
-// import { useState } from 'react'
+import { useState } from 'react'
 // import heroImg from './assets/hero.png'
 // import reactLogo from './assets/react.svg'
 // import viteLogo from './assets/vite.svg'
 import './App.css'
 
 function App() {
+
+  //The Watch will be changing every second on the web page and hence it needs to be re-rendered and re-set there from here -> hence use hook=> useState stte var 
+  const [secondsPassed, setSecondsPassed] = useState(0); //Initial val set to 0 when the page loads 
+
+  //Functio to increment the stop watch -
+  //It reset the counter after every 1 s and re-renderes the func with new val on the page
+  function startClock(){
+      setInterval(()=>{
+        setSecondsPassed( s => s +1)
+      }, 1000)//after every 1000ms == 1s
+  };
   return(
     <div 
     style={{
@@ -27,14 +38,14 @@ function App() {
             
           }}
         >
-          <button>Start Clock</button>
+          <button onClick = {startClock}>Start Clock</button>
           <button>Stop Clock</button>   
         </div>
 
         {/* The timer */}
         <div>
             {/* <h1>00:00:00</h1> */}
-            <h1>0 s</h1>
+            <h1>{secondsPassed} s</h1> {/* Remember to mention the state var here and not 0 written by u */}
         </div>
        
       </div>
