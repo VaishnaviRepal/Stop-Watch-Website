@@ -4,6 +4,8 @@ import { useState } from 'react'
 // import viteLogo from './assets/vite.svg'
 import './App.css'
 
+let intervalId ; //For the loop of interval started
+
 function App() {
 
   //The Watch will be changing every second on the web page and hence it needs to be re-rendered and re-set there from here -> hence use hook=> useState stte var 
@@ -12,10 +14,19 @@ function App() {
   //Functio to increment the stop watch -
   //It reset the counter after every 1 s and re-renderes the func with new val on the page
   function startClock(){
-      setInterval(()=>{
+      //Storing the interval id of this loop 
+      intervalId = setInterval(()=>{
         setSecondsPassed( s => s +1)
       }, 1000)//after every 1000ms == 1s
+
+      //setSecondsPassed is a function and requires the curr val of the state var to be passed to work on it otherwise it might just work on the inital value only 
   };
+
+  function stopClock(){
+      //Stoped the started loop of clock by setInterval with its id -- a kill switch
+      clearInterval(intervalId);
+  }
+
   return(
     <div 
     style={{
@@ -39,7 +50,7 @@ function App() {
           }}
         >
           <button onClick = {startClock}>Start Clock</button>
-          <button>Stop Clock</button>   
+          <button onClick = {stopClock}>Stop Clock</button>   
         </div>
 
         {/* The timer */}
