@@ -1,11 +1,18 @@
 //----------------------------------------------------------
-
+//    ###            CONTEXT API          ###
 //###---Props Drilling and Roll-up the state Concepts ----###
 
 // -----------------------------------------------------------
 
 //Import the custom hook made for this purpose esp
 import {useTodos, type TodoType} from "./CustomHooks/useTodos";
+import {createContext, useContext, type Dispatch, type SetStateAction} from "react";
+
+// Keep the context local so this study component does not depend on a missing
+// ./Context module.
+const SetTodosContext = createContext<{
+    setTodos: Dispatch<SetStateAction<TodoType[]>>;
+} | undefined>(undefined);
 
 //To Delete the todos printed
 function CustomHooks_Study(){
@@ -15,22 +22,25 @@ function CustomHooks_Study(){
     // as  [Todo[], React.Dispatch<React.SetStateAction<Todo[]>>]; // get those todos, we need setTodos too for deletion purpose
 
     return (
-        <div>
-            {todos.map(t => 
-                <Todos
-                //Calls a component for deletion and updation while passing the foll componenets
-                    key = {t.id}
-                    title = {t.title}
-                    id  = {t.id}
-                    setTodos = {setTodos}
-                />
-            )}
-                      
-        </div>
+        <SetTodosContext.Provider value = {{setTodos}}>
+            <div>
+                {todos.map(t => 
+                    <Todos
+                    //Calls a component for deletion and updation while passing the foll componenets
+                        key = {t.id}
+                        title = {t.title}
+                        id  = {t.id}
+                        
+                    />
+                )}
+                        
+            </div>
+        </SetTodosContext.Provider>
+        
     )
 }
 
-function Todos({id , title , setTodos} : TodoType & { setTodos: React.Dispatch<React.SetStateAction<TodoType[]>> }){
+function Todos({id , title } : TodoType ){
     //On page return the title and delete button -> on click deletes/ removes it on page by filter
     return (
         <div
@@ -44,7 +54,7 @@ function Todos({id , title , setTodos} : TodoType & { setTodos: React.Dispatch<R
 
             
                         {/* // setTodos( todos => todos.filter(x => x.id !== id) ) */}
-            <DeleteTodo id = {id} setTodos = {setTodos} />
+            <DeleteTodo id = {id} />
                   
         </div>
     )
@@ -53,7 +63,12 @@ function Todos({id , title , setTodos} : TodoType & { setTodos: React.Dispatch<R
 
 }
 
-function DeleteTodo({id, setTodos}: Pick<TodoType, "id"> & { setTodos: React.Dispatch<React.SetStateAction<TodoType[]>> }){
+function DeleteTodo({id}: Pick<TodoType, "id"> ){
+    const context = useContext(SetTodosContext);
+    if (!context) {
+        throw new Error("DeleteTodo must be rendered inside SetTodosContext.Provider");
+    }
+    const {setTodos} = context;
     return(
         <div>
             
