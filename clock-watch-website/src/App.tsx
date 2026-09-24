@@ -1,3 +1,5 @@
+//### ----Here implementing the Stpo-Watch -> for stufying ref , useRef----###
+
 import { useState , useRef} from 'react' // Adding useRef for intervalId to stop  re-rendering due to it 
 // import heroImg from './assets/hero.png'
 // import reactLogo from './assets/react.svg'
@@ -18,7 +20,7 @@ function App() {
       //Edge Case : to avoid ghost loops when the start button is clicked many times :
       // FIX: Optional safety check to stop duplicate timers if clicked repeatedly
       if (intervalId.current !== 0) return;
-      
+
       //Storing the interval id of this loop 
       intervalId.current = setInterval(()=>{
         setSecondsPassed( s => s +1)
